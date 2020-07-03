@@ -189,25 +189,25 @@ class _AvatarState extends State<Avatar> {
           width: 2,
         ),
       ),
-//      child: TweenAnimationBuilder(
-//        duration: Duration(milliseconds: 1500),
-//        curve: Curves.easeInOut,
-//        tween: Tween<double>(begin: 0, end: face),
-//        onEnd: () => setState(() => face == 1 ? face = 0 : face = 1),
-//        builder: (context, value, child) {
-//          return Transform.translate(
-//            offset: Offset(
-//                -0.35 * kPlayerScreenUnit, 0.37 * kPlayerScreenUnit - value * 0.02 * kPlayerScreenUnit),
-//            child: Transform.rotate(angle: -value * 0.05, child: child),
-//          );
-//        },
-//        child: Transform.scale(
-//          scale: 1.2,
-//          child: Image.asset(
-//            'assets/avatar_face.png',
-//          ),
-//        ),
-//      ),
+      child: TweenAnimationBuilder(
+        duration: Duration(milliseconds: 1500),
+        curve: Curves.easeInOut,
+        tween: Tween<double>(begin: 0, end: face),
+        onEnd: () => setState(() => face == 1 ? face = 0 : face = 1),
+        builder: (context, value, child) {
+          return Transform.translate(
+            offset: Offset(
+                -0.35 * kPlayerScreenUnit, 0.37 * kPlayerScreenUnit - value * 0.02 * kPlayerScreenUnit),
+            child: Transform.rotate(angle: -value * 0.05, child: child),
+          );
+        },
+        child: Transform.scale(
+          scale: 1.2,
+          child: Image.asset(
+            'assets/avatar_face.png',
+          ),
+        ),
+      ),
     );
   }
 }
