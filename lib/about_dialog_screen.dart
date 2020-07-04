@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flare_flutter/flare_actor.dart';
 import 'constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'player_screen_widgets/custom_icons.dart';
+import 'package:package_info/package_info.dart';
 
 class AboutDialogScreen extends StatefulWidget {
   @override
@@ -15,6 +14,7 @@ class AboutDialogScreen extends StatefulWidget {
 class _AboutDialogScreenState extends State<AboutDialogScreen> {
   double pos = 0;
   bool logoAnimationDone = false;
+  String version, buildNumber;
 
   @override
   void initState() {
@@ -28,6 +28,18 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
       setState(() {
         logoAnimationDone = true;
       });
+    });
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      version = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+      print(appName);
+      print(packageName);
+      print(version);
+      print(buildNumber);
+//      setState(() {}); //many of these in the initial animations :-)
     });
   }
 
@@ -70,7 +82,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 5.5 * kPlayerScreenUnit + pos * 0.5 * kPlayerScreenUnit),
+                  padding: EdgeInsets.only(bottom: 6 * kPlayerScreenUnit),
                   child: ClipText(
                     'PURAN SINGH',
                     direction: 1,
@@ -81,7 +93,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: pos * 5.5 * kPlayerScreenUnit),
+                  padding: EdgeInsets.only(bottom: 5.5 * kPlayerScreenUnit),
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 1200),
                     curve: Interval(0.66, 1, curve: Curves.fastOutSlowIn),
@@ -97,14 +109,44 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                     style: TextStyle(fontSize: 0.25 * kPlayerScreenUnit),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5.2 * kPlayerScreenUnit),
+                  child: ClipText(
+                    'STACK MUSIC',
+                    direction: 1,
+                    style: TextStyle(
+                      fontFamily: 'BankGothic',
+                      fontSize: 0.51 * kPlayerScreenUnit,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5.7 * kPlayerScreenUnit),
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 1200),
+                    curve: Interval(0.66, 1, curve: Curves.fastOutSlowIn),
+                    width: pos * 4 * kPlayerScreenUnit,
+                    child: Divider(color: Colors.white, height: 1),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.06 * kPlayerScreenUnit),
+                  child: ClipText(
+                    ' Version: $version        BuildNumber: $buildNumber',
+                    direction: -1,
+                    style: TextStyle(fontSize: 0.25 * kPlayerScreenUnit),
+                  ),
+                ),
                 AnimatedPadding(
                   padding: EdgeInsets.only(top: pos * 9 * kPlayerScreenUnit),
                   duration: Duration(milliseconds: 400),
                   curve: Curves.fastOutSlowIn,
                   child: GestureDetector(
                     onTap: () {
-                      Future.delayed(Duration(seconds: 3), () => setState(() => logoAnimationDone = true));
-                      setState(() => logoAnimationDone = false);
+                      if (logoAnimationDone) {
+                        Future.delayed(Duration(seconds: 3), () => setState(() => logoAnimationDone = true));
+                        setState(() => logoAnimationDone = false);
+                      }
                     },
                     child: Container(
                       width: 2.2 * kPlayerScreenUnit,
@@ -129,7 +171,65 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                 Container(
                   width: 4 * kPlayerScreenUnit,
                   height: 4 * kPlayerScreenUnit,
+                  padding: EdgeInsets.all(0.4 * kPlayerScreenUnit),
                   color: Colors.grey[600],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'This app is the hard work of a lazy programmer. Please leave a rating on the Google play store if you liked it.',
+                        textScaleFactor: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 0.25 * kPlayerScreenUnit, height: 1.4),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                        ],
+                      ),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(0.1 * kPlayerScreenUnit)),
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async {
+                            const url =
+                                'https://play.google.com/store/apps/details?id=com.puran.stopwatchminimal';
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              print('invalid url----' * 10);
+                            }
+                          },
+                          highlightColor: Colors.black,
+                          borderRadius: BorderRadius.all(Radius.circular(0.1 * kPlayerScreenUnit)),
+                          child: Container(
+                            width: double.infinity,
+                            height: 0.6 * kPlayerScreenUnit,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(0.1 * kPlayerScreenUnit)),
+                              border: Border.all(
+                                color: Colors.white,
+                                style: BorderStyle.solid,
+                                width: 1,
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'RATE ON GOOGLE PLAY',
+                              textScaleFactor: 1,
+                              style:
+                                  TextStyle(fontWeight: FontWeight.bold, fontSize: 0.25 * kPlayerScreenUnit),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -186,7 +286,7 @@ class _AvatarState extends State<Avatar> {
         border: Border.all(
           color: Colors.white,
           style: BorderStyle.solid,
-          width: 2,
+          width: 1,
         ),
       ),
       child: TweenAnimationBuilder(
