@@ -65,7 +65,8 @@ class _BottomStackState extends State<BottomStack> {
           curve: Curves.fastOutSlowIn,
           tween: Tween<double>(begin: initialAnimations ? 3 : 0, end: destination),
           builder: (BuildContext context, double d, Widget child) {
-            return Transform.translate(offset: Offset(d * widget.unit, -0.5 * d * widget.unit), child: child);
+            return Transform.translate(
+                offset: Offset(d * widget.unit, 0.5 * (1 - d) * widget.unit), child: child);
           },
           child: Align(
             alignment: Alignment.bottomRight,
@@ -78,7 +79,7 @@ class _BottomStackState extends State<BottomStack> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: widget.unit),
+          padding: EdgeInsets.only(left: widget.unit, top: 0.5 * widget.unit),
           child: Material(
             elevation: 3,
             child: Container(
@@ -89,7 +90,7 @@ class _BottomStackState extends State<BottomStack> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: widget.unit, top: widget.unit),
+          padding: EdgeInsets.only(right: widget.unit, top: 1.5 * widget.unit),
           child: Material(
             elevation: 3,
             child: Container(
@@ -100,7 +101,7 @@ class _BottomStackState extends State<BottomStack> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 3 * widget.unit),
+          padding: EdgeInsets.only(left: 3 * widget.unit, top: 0.5 * widget.unit),
           child: Transform(
             transform: Matrix4.skew(0, -0.463),
             child: Material(
@@ -127,7 +128,7 @@ class _BottomStackState extends State<BottomStack> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 3 * widget.unit, top: 1.5 * widget.unit),
+          padding: EdgeInsets.only(right: 3 * widget.unit, top: 2 * widget.unit),
           child: Transform(
             transform: Matrix4.skew(0, -0.463),
             child: Material(
@@ -154,7 +155,7 @@ class _BottomStackState extends State<BottomStack> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 0.35 * widget.unit),
+          padding: EdgeInsets.only(top: 0.85 * widget.unit),
           child: Material(
             color: widget.col2,
             elevation: 3,

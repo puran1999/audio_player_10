@@ -132,199 +132,202 @@ class _CenterStackState extends State<CenterStack> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 7 * widget.unit,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          ///this one is just to constrain the minimum vertical size, to make animations stable
-          Container(
-            color: Colors.transparent,
-            width: 50,
-            height: 6 * widget.unit,
-          ),
-          AnimatedPadding(
-            ///sequence progression
-            onEnd: nextAnimation,
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(top: listButtonBackPad.dy, right: listButtonBackPad.dx),
-            child: Transform(
-              transform: Matrix4.skew(0, -0.463),
-              child: Material(
-                elevation: 3,
-                child: Container(
-                  width: widget.unit,
-                  height: widget.unit,
-                  color: widget.col3,
-                ),
-              ),
+    return Transform.translate(
+      offset: Offset(0, 0.2 * widget.unit),
+      child: SizedBox(
+        width: 7 * widget.unit,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            ///this one is just to constrain the minimum vertical size, to make animations stable
+            Container(
+              color: Colors.transparent,
+              width: 50,
+              height: 6 * widget.unit,
             ),
-          ),
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(top: shuffleButtonBackPad.dy, left: shuffleButtonBackPad.dx),
-            child: Transform(
-              transform: Matrix4.skew(0, -0.463),
-              child: Material(
-                elevation: 3,
-                child: Container(
-                  width: widget.unit,
-                  height: widget.unit,
-                  color: widget.col3,
-                ),
-              ),
-            ),
-          ),
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-//            padding: EdgeInsets.only(top: 2.58 * widget.unit, left: 3.2 * widget.unit),
-            padding: EdgeInsets.only(
-                top: loopButtonPad.dy - 0.92 * widget.unit, left: loopButtonPad.dx - 1.8 * widget.unit),
-            child: Transform.rotate(
-              angle: 3.141 / 2 - 0.463,
+            AnimatedPadding(
+              ///sequence progression
+              onEnd: nextAnimation,
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(top: listButtonBackPad.dy, right: listButtonBackPad.dx),
               child: Transform(
-                transform: Matrix4.skew(0, -0.643),
+                transform: Matrix4.skew(0, -0.463),
                 child: Material(
                   elevation: 3,
                   child: Container(
                     width: widget.unit,
-                    height: 1.12 * widget.unit,
+                    height: widget.unit,
                     color: widget.col3,
                   ),
                 ),
               ),
             ),
-          ),
-
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(top: shuffleButtonPad.dy, left: shuffleButtonPad.dx),
-            child: Button(
-              size: widget.unit,
-              bgCol: widget.col2,
-              fgCol: widget.col1,
-              ico: player.shuffle ? MyFlutterApp.icon_shuffle_true : MyFlutterApp.icon_shuffle_false,
-              onTap: () {
-                setState(() {
-                  player.shuffle = !player.shuffle;
-                  playerScaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: RichText(
-                      text: TextSpan(
-                        text: player.shuffle ? 'Shuffle ON' : 'Shuffle OFF',
-                        style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 500),
-                    backgroundColor: Colors.black45,
-                  ));
-                });
-              },
-            ),
-          ),
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(left: loopButtonPad.dx, top: loopButtonPad.dy),
-            child: Button(
-              size: widget.unit,
-              bgCol: widget.col2,
-              fgCol: widget.col1,
-              ico: player.loopSingle ? MyFlutterApp.icon_loop_true : MyFlutterApp.icon_loop_false,
-              onTap: () {
-                setState(() {
-                  player.loopSingle = !player.loopSingle;
-                  playerScaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: RichText(
-                      text: TextSpan(
-                        text: player.loopSingle ? 'Loop single' : 'No loop',
-                        style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 500),
-                    backgroundColor: Colors.black45,
-                  ));
-                });
-              },
-            ),
-          ),
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(top: listButtonPad.dy, right: listButtonPad.dx),
-            child: Button(
-              size: widget.unit,
-              bgCol: widget.col2,
-              fgCol: widget.col1,
-              ico: MyFlutterApp.icon_menu,
-              onTap: () {
-                setState(() {
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                  storage.copy_audiosInFolderPlaying0_into_audiosInFolderNavigation();
-                  storage.currentNavigationFolderIndex = storage.currentPlayingFolderIndex;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AudioScreen(
-                                autoScroll: true,
-                              ))).then((value) => setStateCalls.folderScreen());
-                });
-              },
-            ),
-          ),
-
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(left: topRightClipPad.dx, top: topRightClipPad.dy),
-            child: ClipPath(
-              clipper: TopRightClip(),
-              child: SquaredAlbumArtWidget(size: 4 * widget.unit),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: widget.unit / 2),
-            child: ClipPath(
-              clipper: animationStep <= 1 ? CenterClipWithBottomLeft() : CenterClipWithoutBottomLeft(),
-              child: SquaredAlbumArtWidget(size: 4 * widget.unit),
-            ),
-          ),
-          AnimatedPadding(
-            duration: commonDuration,
-            curve: commonCurve,
-            padding: EdgeInsets.only(top: bottomLeftClipPad.dy, right: bottomLeftClipPad.dx),
-            child: ClipPath(
-              clipper: BottomLeftClip(),
-              child: SquaredAlbumArtWidget(size: 4 * widget.unit),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Transform.translate(
-              offset: Offset(2.5 * widget.unit, 0),
-              child: AnimatedPadding(
-                duration: commonDuration,
-                curve: commonCurve,
-                padding: EdgeInsets.only(
-                  top: bottomRightClipPad.dy,
-                  right: bottomRightClipPad.dx,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  heightFactor: 0.5,
-                  child: ClipPath(
-                    clipper: BottomRightClip(),
-                    child: SquaredAlbumArtWidget(size: 4 * widget.unit),
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(top: shuffleButtonBackPad.dy, left: shuffleButtonBackPad.dx),
+              child: Transform(
+                transform: Matrix4.skew(0, -0.463),
+                child: Material(
+                  elevation: 3,
+                  child: Container(
+                    width: widget.unit,
+                    height: widget.unit,
+                    color: widget.col3,
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+//            padding: EdgeInsets.only(top: 2.58 * widget.unit, left: 3.2 * widget.unit),
+              padding: EdgeInsets.only(
+                  top: loopButtonPad.dy - 0.92 * widget.unit, left: loopButtonPad.dx - 1.8 * widget.unit),
+              child: Transform.rotate(
+                angle: 3.141 / 2 - 0.463,
+                child: Transform(
+                  transform: Matrix4.skew(0, -0.643),
+                  child: Material(
+                    elevation: 3,
+                    child: Container(
+                      width: widget.unit,
+                      height: 1.12 * widget.unit,
+                      color: widget.col3,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(top: shuffleButtonPad.dy, left: shuffleButtonPad.dx),
+              child: Button(
+                size: widget.unit,
+                bgCol: widget.col2,
+                fgCol: widget.col1,
+                ico: player.shuffle ? MyFlutterApp.icon_shuffle_true : MyFlutterApp.icon_shuffle_false,
+                onTap: () {
+                  setState(() {
+                    player.shuffle = !player.shuffle;
+                    playerScaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: RichText(
+                        text: TextSpan(
+                          text: player.shuffle ? 'Shuffle ON' : 'Shuffle OFF',
+                          style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 500),
+                      backgroundColor: Colors.black45,
+                    ));
+                  });
+                },
+              ),
+            ),
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(left: loopButtonPad.dx, top: loopButtonPad.dy),
+              child: Button(
+                size: widget.unit,
+                bgCol: widget.col2,
+                fgCol: widget.col1,
+                ico: player.loopSingle ? MyFlutterApp.icon_loop_true : MyFlutterApp.icon_loop_false,
+                onTap: () {
+                  setState(() {
+                    player.loopSingle = !player.loopSingle;
+                    playerScaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: RichText(
+                        text: TextSpan(
+                          text: player.loopSingle ? 'Loop single' : 'No loop',
+                          style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 500),
+                      backgroundColor: Colors.black45,
+                    ));
+                  });
+                },
+              ),
+            ),
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(top: listButtonPad.dy, right: listButtonPad.dx),
+              child: Button(
+                size: widget.unit,
+                bgCol: widget.col2,
+                fgCol: widget.col1,
+                ico: MyFlutterApp.icon_menu,
+                onTap: () {
+                  setState(() {
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                    storage.copy_audiosInFolderPlaying0_into_audiosInFolderNavigation();
+                    storage.currentNavigationFolderIndex = storage.currentPlayingFolderIndex;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AudioScreen(
+                                  autoScroll: true,
+                                ))).then((value) => setStateCalls.folderScreen());
+                  });
+                },
+              ),
+            ),
+
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(left: topRightClipPad.dx, top: topRightClipPad.dy),
+              child: ClipPath(
+                clipper: TopRightClip(),
+                child: SquaredAlbumArtWidget(size: 4 * widget.unit),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: widget.unit / 2),
+              child: ClipPath(
+                clipper: animationStep <= 1 ? CenterClipWithBottomLeft() : CenterClipWithoutBottomLeft(),
+                child: SquaredAlbumArtWidget(size: 4 * widget.unit),
+              ),
+            ),
+            AnimatedPadding(
+              duration: commonDuration,
+              curve: commonCurve,
+              padding: EdgeInsets.only(top: bottomLeftClipPad.dy, right: bottomLeftClipPad.dx),
+              child: ClipPath(
+                clipper: BottomLeftClip(),
+                child: SquaredAlbumArtWidget(size: 4 * widget.unit),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Transform.translate(
+                offset: Offset(2.5 * widget.unit, 0),
+                child: AnimatedPadding(
+                  duration: commonDuration,
+                  curve: commonCurve,
+                  padding: EdgeInsets.only(
+                    top: bottomRightClipPad.dy,
+                    right: bottomRightClipPad.dx,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    heightFactor: 0.5,
+                    child: ClipPath(
+                      clipper: BottomRightClip(),
+                      child: SquaredAlbumArtWidget(size: 4 * widget.unit),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

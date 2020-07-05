@@ -58,7 +58,7 @@ class _MightySliderState extends State<MightySlider> {
   Widget build(BuildContext context) {
     return Transform.translate(
       /// to balance the padding. When the column is rotated, the slider goes to right side a little
-      offset: Offset(-widget.width / 24, 0),
+      offset: Offset(-widget.width / 24, 2 * widget.width / 24),
       child: Transform.rotate(
         angle: -0.463, //atan(0.5)
         child: Column(
@@ -70,7 +70,7 @@ class _MightySliderState extends State<MightySlider> {
                 child: RichText(
                   text: TextSpan(
                     text:
-                        '${player.secondsToString(_audioPositionSeconds)} / ${player.secondsToString(_audioDurationSeconds)}',
+                        '${player.secondsToString(_audioPositionSeconds)}   |   ${player.secondsToString(_audioDurationSeconds)}',
                     style: TextStyle(
                       color: widget.col1,
                       fontSize: widget.width / 12,

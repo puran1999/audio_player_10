@@ -31,12 +31,12 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
     });
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      String appName = packageInfo.appName;
-      String packageName = packageInfo.packageName;
+//      String appName = packageInfo.appName;
+//      String packageName = packageInfo.packageName;
       version = packageInfo.version;
       buildNumber = packageInfo.buildNumber;
-      print(appName);
-      print(packageName);
+//      print(appName);
+//      print(packageName);
       print(version);
       print(buildNumber);
 //      setState(() {}); //many of these in the initial animations :-)

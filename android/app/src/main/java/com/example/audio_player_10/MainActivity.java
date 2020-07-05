@@ -1,7 +1,10 @@
 package com.example.audio_player_10;
 
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,7 @@ public class MainActivity extends FlutterActivity {
 
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     private AudioManager audioManager;
+    private Object audioFocusRequest;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -30,17 +34,31 @@ public class MainActivity extends FlutterActivity {
                 .setMethodCallHandler(
                         (call, result) -> {
                             if (call.method.equals("requestAudioFocus")) {
-                                int r = audioManager.requestAudioFocus(
-                                        audioFocusChangeListener,
-                                        AudioManager.STREAM_MUSIC,
-                                        AudioManager.AUDIOFOCUS_GAIN
-                                );
+                                int r = 0;
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                                    r = audioManager.requestAudioFocus(
+                                            audioFocusChangeListener,
+                                            AudioManager.STREAM_MUSIC,
+                                            AudioManager.AUDIOFOCUS_GAIN
+                                    );
+                                } else {
+                                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                            .build();
+                                    audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                            .setAudioAttributes(audioAttributes)
+                                            .setWillPauseWhenDucked(true)
+                                            .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                                            .build();
+                                    r = audioManager.requestAudioFocus((AudioFocusRequest) audioFocusRequest);
+                                }
                                 if (r == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                                     result.success("GRANTED");
                                 } else {
                                     result.success("FAILED");
                                 }
-                            }else {
+                            } else {
                                 result.notImplemented();
                             }
                         }

@@ -127,7 +127,7 @@ class Player {
   Future<void> mediaEventListener(MediaEvent mediaEvent) async {
     final MediaActionType type = mediaEvent.type;
     if (type == MediaActionType.play) {
-      resumeBackgroundAudio();
+      await resumeBackgroundAudio();
       setStateCalls.folderScreen(); //!! do not alter the order of callbacks
       setStateCalls.audioScreen();
       setStateCalls.playerScreen();
