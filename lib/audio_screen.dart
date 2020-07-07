@@ -41,7 +41,7 @@ class AudioScreenState extends State<AudioScreen> {
   /// !! dispose of prev is called after initState of new, thus removing the callback !!
   /// So, callback is not removed in dispose as done in other widgets.
   /// instead, callback checks mounted property and then calls setState.
-  /// mounted is true only is a widget is present in a tree.
+  /// mounted is true only if a widget is present in a tree.
   void simpleSetState() {
     if (mounted) {
       setState(() {

@@ -18,10 +18,11 @@ class CenterStack extends StatefulWidget {
   _CenterStackState createState() => _CenterStackState();
 }
 
-class _CenterStackState extends State<CenterStack> {
+class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     setStateCalls.centreStackAnimation = setStateAnimation;
     if (initialAnimations) {
       //padding values for a complete image in the start
@@ -62,8 +63,31 @@ class _CenterStackState extends State<CenterStack> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     setStateCalls.centreStackAnimation = () => print('center stack is already removed -- ' * 100);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+//    print('$state---------------' * 500);
+    if (state == AppLifecycleState.resumed) {
+//      print('now*****' * 500);
+      if (initialAnimations && animationStep > 3) {
+        setState(() {
+          //padding values for a complete image in the start
+          topRightClipPad = Offset(0, 0.5 * widget.unit);
+          bottomLeftClipPad = Offset(0, 0.5 * widget.unit);
+          bottomRightClipPad = Offset(4 * widget.unit, 2.5 * widget.unit);
+          loopButtonPad = Offset(3 * widget.unit, 3 * widget.unit);
+          shuffleButtonPad = Offset(3 * widget.unit, 2 * widget.unit);
+          shuffleButtonBackPad = Offset(3 * widget.unit, 2 * widget.unit);
+          listButtonPad = Offset(3 * widget.unit, 2.5 * widget.unit);
+          listButtonBackPad = Offset(3 * widget.unit, 1.5 * widget.unit);
+          animationStep = 0;
+        });
+      }
+    }
   }
 
   final Duration commonDuration = const Duration(milliseconds: 400);
@@ -81,7 +105,7 @@ class _CenterStackState extends State<CenterStack> {
   void nextAnimation() {
     if (initialAnimations) {
       if (animationStep == 0) {
-        Future.delayed(Duration(milliseconds: 1200), () {
+        Future.delayed(Duration(milliseconds: 800), () {
           if (mounted) {
             setState(() {
               bottomLeftClipPad = Offset(0, 1.5 * widget.unit);

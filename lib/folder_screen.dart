@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'classes/set_state_callbacks.dart';
 import 'classes/storage.dart';
+import 'classes/player.dart';
 import 'audio_screen.dart';
+import 'player_screen.dart';
 import 'floating_player.dart';
 import 'background_image.dart';
 import 'constants.dart';
@@ -15,10 +16,11 @@ class FolderScreen extends StatefulWidget {
   _FolderScreenState createState() => _FolderScreenState();
 }
 
-class _FolderScreenState extends State<FolderScreen> {
+class _FolderScreenState extends State<FolderScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     setStateCalls.folderScreen = () => setState(() {});
     settingsLoad();
   }
@@ -37,8 +39,18 @@ class _FolderScreenState extends State<FolderScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     setStateCalls.folderScreen = () => print('folder screen already disposed -' * 20);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+//    print('$state---------------' * 500);
+    if (state == AppLifecycleState.resumed && player.audio != null && !playerScreenMounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()))
+          .then((value) => setState(() {}));
+    }
   }
 
   @override
@@ -92,8 +104,12 @@ class _FolderScreenState extends State<FolderScreen> {
               ),
               body: WillPopScope(
                 onWillPop: () async {
-                  MoveToBackground.moveTaskToBack();
-                  return false;
+                  bool b = true;
+                  if (player.audio != null) {
+                    MoveToBackground.moveTaskToBack();
+                    b = false;
+                  }
+                  return b;
                 },
                 child: ListView.separated(
                   itemCount: storage.foldersWithAudio.length + 1,

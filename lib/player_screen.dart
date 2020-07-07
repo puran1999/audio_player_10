@@ -4,6 +4,8 @@ import 'classes/set_state_callbacks.dart';
 import 'player_screen_widgets/player_widget.dart';
 import 'background_image.dart';
 
+bool playerScreenMounted = false;
+
 final playerScaffoldKey = GlobalKey<ScaffoldState>();
 
 class PlayerScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class PlayerScreenState extends State<PlayerScreen> {
   @override
   void initState() {
     super.initState();
+    playerScreenMounted = true;
     setStateCalls.playerScreen = () {
       setState(() {});
       setStateCalls.bottomStackAnimation();
@@ -24,6 +27,7 @@ class PlayerScreenState extends State<PlayerScreen> {
   @override
   void dispose() {
     super.dispose();
+    playerScreenMounted = false;
     setStateCalls.playerScreen = () => print('player screen already disposed -' * 20);
   }
 

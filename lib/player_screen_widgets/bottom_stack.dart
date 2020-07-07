@@ -16,26 +16,47 @@ class BottomStack extends StatefulWidget {
   _BottomStackState createState() => _BottomStackState();
 }
 
-class _BottomStackState extends State<BottomStack> {
+class _BottomStackState extends State<BottomStack> with WidgetsBindingObserver {
   Offset bottomRightClipPad;
+  double destination = 3;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     setStateCalls.bottomStackAnimation = setStateAnimation;
     if (initialAnimations) {
-      Future.delayed(Duration(milliseconds: 1800), () {
-        if (mounted) {
-          setState(() {
-            destination = 0;
-          });
-        }
+      Future.delayed(Duration(milliseconds: 1200), () {
+        if (mounted) setState(() => destination = 0);
       });
     } else {
       if (playPauseAnimations) {
         player.audioPlaying ? destination = 0 : destination = 0.78;
       } else {
         destination = 0;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+    setStateCalls.bottomStackAnimation = () => print('bottom stack already disposed -' * 20);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+//    print('$state---------------' * 500);
+    if (state == AppLifecycleState.resumed) {
+//      print('now*****' * 500);
+      if (initialAnimations) {
+        if (destination == 0 || destination == 0.78) {
+          setState(() => destination = 3);
+          Future.delayed(Duration(milliseconds: 1600), () {
+            if (mounted) setState(() => destination = 0);
+          });
+        }
       }
     }
   }
@@ -48,8 +69,6 @@ class _BottomStackState extends State<BottomStack> {
     setState(() {});
   }
 
-  double destination = 3;
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -57,7 +76,7 @@ class _BottomStackState extends State<BottomStack> {
       children: <Widget>[
         TweenAnimationBuilder(
           onEnd: () {
-            if (playPauseAnimations) {
+            if (playPauseAnimations && destination != 3) {
               setState(() => player.audioPlaying ? destination = 0 : destination = 0.78);
             }
           },
