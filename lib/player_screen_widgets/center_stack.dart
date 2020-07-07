@@ -209,14 +209,15 @@ class _CenterStackState extends State<CenterStack> {
                 size: widget.unit,
                 bgCol: widget.col2,
                 fgCol: widget.col1,
-                ico: player.shuffle ? MyFlutterApp.icon_shuffle_true : MyFlutterApp.icon_shuffle_false,
+                ico: shuffle ? MyFlutterApp.icon_shuffle_true : MyFlutterApp.icon_shuffle_false,
                 onTap: () {
                   setState(() {
-                    player.shuffle = !player.shuffle;
+                    shuffle = !shuffle;
+                    saveToDevice(name: 'shuffle', value: shuffle);
                     playerScaffoldKey.currentState.showSnackBar(SnackBar(
                       content: RichText(
                         text: TextSpan(
-                          text: player.shuffle ? 'Shuffle ON' : 'Shuffle OFF',
+                          text: shuffle ? 'Shuffle ON' : 'Shuffle OFF',
                           style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
                         ),
                       ),
@@ -235,14 +236,15 @@ class _CenterStackState extends State<CenterStack> {
                 size: widget.unit,
                 bgCol: widget.col2,
                 fgCol: widget.col1,
-                ico: player.loopSingle ? MyFlutterApp.icon_loop_true : MyFlutterApp.icon_loop_false,
+                ico: loopSingle ? MyFlutterApp.icon_loop_true : MyFlutterApp.icon_loop_false,
                 onTap: () {
                   setState(() {
-                    player.loopSingle = !player.loopSingle;
+                    loopSingle = !loopSingle;
+                    saveToDevice(name: 'loopSingle', value: loopSingle);
                     playerScaffoldKey.currentState.showSnackBar(SnackBar(
                       content: RichText(
                         text: TextSpan(
-                          text: player.loopSingle ? 'Loop single' : 'No loop',
+                          text: loopSingle ? 'Loop single' : 'No loop',
                           style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
                         ),
                       ),

@@ -248,6 +248,11 @@ class Storage {
     'aac',
     'flac',
   ];
+
+  String get listSupportedAudioFormats {
+    return _supportedAudioFormats.toString();
+  }
+
 //  final List<String> _supportedVideoFormats = [
 //    'mp4',
 //    '3gp',

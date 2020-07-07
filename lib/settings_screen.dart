@@ -493,12 +493,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             size: txtHeadingSize * kListTileHeight,
                           ),
                           MyAnimatedSizeText(
-                            '1. The metadata of a file is stored in an mp3 with the help of ID3 tags. To change the Title, Artist Name, Album Art or anything else, you can use any online tool or download AutomaTag from google play store.',
+                            '1. The metadata of an audio file is stored with the help of ID3 tags. To change the Title, Artist Name, Album Art or anything else, you can use any online tool or download AutomaTag from google play store.',
                             size: txtBodySize * kListTileHeight,
                             col: txtBodyCol,
                           ),
                           MyAnimatedSizeText(
-                            '2. Another way is to add a Folder.jpg or Cover.jpg (case insensitive) image file in the audio\'s folder. This also works on a windows machine.',
+                            '2. Another way is to add a Folder.jpg or Cover.jpg (case insensitive) image file in the audio\'s folder. This image will be used as the album art only for those audio files, which do not have any. This method also works on a windows machine.',
                             size: txtBodySize * kListTileHeight,
                             col: txtBodyCol,
                           ),
@@ -518,7 +518,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             size: txtHeadingSize * kListTileHeight,
                           ),
                           MyAnimatedSizeText(
-                            'The name showed in audio list view is the filename, whereas the one shown on the player screen is the \'Title\' embedded in the ID3 tag. Refer to the first question to change that.',
+                            'The name showed in audio list view is the Filename, whereas the one shown on the player screen is the \'Title\' embedded in the ID3 tag. Refer to the first question to change that.',
                             size: txtBodySize * kListTileHeight,
                             col: txtBodyCol,
                           ),
@@ -527,6 +527,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   Divider(height: 1),
+                  ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          MyAnimatedSizeText(
+                            'What are the supported audio formats?',
+                            size: txtHeadingSize * kListTileHeight,
+                          ),
+                          MyAnimatedSizeText(
+                            storage.listSupportedAudioFormats,
+                            size: txtBodySize * kListTileHeight,
+                            col: txtBodyCol,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

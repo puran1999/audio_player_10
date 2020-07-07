@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'classes/set_state_callbacks.dart';
 import 'classes/storage.dart';
 import 'audio_screen.dart';
-import 'classes/player.dart';
 import 'floating_player.dart';
 import 'background_image.dart';
 import 'constants.dart';

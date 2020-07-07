@@ -29,6 +29,8 @@ bool playPauseAnimations = true;
 bool sliderAnimations = true;
 bool showFolderPath = true;
 bool showStorageIcons = true;
+bool shuffle = false;
+bool loopSingle = false;
 
 void setAllConstants(BuildContext context) async {
   kScreenSize = MediaQuery.of(context).size;
@@ -46,6 +48,8 @@ Future<void> loadSettings() async {
   sliderAnimations = prefs.getBool('sliderAnimations') ?? sliderAnimations;
   showFolderPath = prefs.getBool('showFolderPath') ?? showFolderPath;
   showStorageIcons = prefs.getBool('showStorageIcons') ?? showStorageIcons;
+  shuffle = prefs.getBool('shuffle') ?? shuffle;
+  loopSingle = prefs.getBool('loopSingle') ?? loopSingle;
 }
 
 void saveToDevice({@required String name, @required dynamic value}) async {
@@ -67,6 +71,8 @@ void resetToDefault() async {
   sliderAnimations = true;
   showFolderPath = true;
   showStorageIcons = true;
+  shuffle = false;
+  loopSingle = false;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('kListTileHeightFactor', kListTileHeightFactor);
   prefs.setInt('kFloaterHeightFactor', kFloaterHeightFactor);
@@ -75,4 +81,6 @@ void resetToDefault() async {
   prefs.setBool('sliderAnimations', sliderAnimations);
   prefs.setBool('showFolderPath', showFolderPath);
   prefs.setBool('showStorageIcons', showStorageIcons);
+  prefs.setBool('shuffle', shuffle);
+  prefs.setBool('loopSingle', loopSingle);
 }

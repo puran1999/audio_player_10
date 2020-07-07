@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flare_flutter/flare_actor.dart';
@@ -14,31 +16,32 @@ class AboutDialogScreen extends StatefulWidget {
 class _AboutDialogScreenState extends State<AboutDialogScreen> {
   double pos = 0;
   bool logoAnimationDone = false;
-  String version, buildNumber;
+  String version;
+  Widget dialogWidget;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 100), () {
-      setState(() {
-        pos = 1;
-      });
+    Future.delayed(Duration(milliseconds: 50), () {
+      if (mounted) setState(() => pos = 1);
     });
-    Future.delayed(Duration(seconds: 3), () {
-      setState(() {
-        logoAnimationDone = true;
-      });
+    Future.delayed(Duration(seconds: 4), () {
+      if (mounted)
+        setState(() {
+          logoAnimationDone = true;
+          dialogWidget = HiDialog();
+        });
     });
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
 //      String appName = packageInfo.appName;
 //      String packageName = packageInfo.packageName;
       version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
+//      String buildNumber = packageInfo.buildNumber;
 //      print(appName);
 //      print(packageName);
-      print(version);
-      print(buildNumber);
+//      print(version);
+//      print(buildNumber);
 //      setState(() {}); //many of these in the initial animations :-)
     });
   }
@@ -59,6 +62,15 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
             Stack(
               alignment: Alignment.center,
               children: <Widget>[
+                ///dead area
+                Padding(
+                  padding: EdgeInsets.only(bottom: 1 * kPlayerScreenUnit),
+                  child: Container(
+                    color: Colors.transparent,
+                    width: 4.2 * kPlayerScreenUnit,
+                    height: 7.7 * kPlayerScreenUnit,
+                  ),
+                ),
                 AnimatedPadding(
                   padding: EdgeInsets.only(bottom: pos * 9 * kPlayerScreenUnit),
                   duration: Duration(milliseconds: 400),
@@ -72,7 +84,17 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                         url: 'https://www.instagram.com/puran.singh.namdhari/',
                       ),
                       SizedBox(width: 0.2 * kPlayerScreenUnit),
-                      Avatar(),
+                      GestureDetector(
+                        child: Avatar(),
+                        onTap: () {
+                          dialogWidget = null;
+                          setState(() {});
+                          Future.delayed(Duration(milliseconds: 50), () {
+                            dialogWidget = HiDialog();
+                            setState(() {});
+                          });
+                        },
+                      ),
                       SizedBox(width: 0.2 * kPlayerScreenUnit),
                       SocialButton(
                         icon: MyFlutterApp.facebook,
@@ -81,6 +103,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                     ],
                   ),
                 ),
+                dialogWidget ?? Container(),
                 Padding(
                   padding: EdgeInsets.only(bottom: 6 * kPlayerScreenUnit),
                   child: ClipText(
@@ -132,7 +155,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 6.06 * kPlayerScreenUnit),
                   child: ClipText(
-                    ' Version: $version        BuildNumber: $buildNumber',
+                    'Version: $version',
                     direction: -1,
                     style: TextStyle(fontSize: 0.25 * kPlayerScreenUnit),
                   ),
@@ -144,8 +167,10 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                   child: GestureDetector(
                     onTap: () {
                       if (logoAnimationDone) {
-                        Future.delayed(Duration(seconds: 3), () => setState(() => logoAnimationDone = true));
                         setState(() => logoAnimationDone = false);
+                        Future.delayed(Duration(seconds: 3), () {
+                          if (mounted) setState(() => logoAnimationDone = true);
+                        });
                       }
                     },
                     child: Container(
@@ -177,34 +202,29 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'This app is the hard work of a lazy programmer. Please leave a rating on the Google play store if you liked it.',
+                        'This app is the hard work of a lazy programmer. Please leave a review on the Google play store if you liked it.',
                         textScaleFactor: 1,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 0.25 * kPlayerScreenUnit, height: 1.4),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
-                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
-                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
-                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
-                          Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
-                        ],
+                      GestureDetector(
+                        onTap: openGooglePlayLink,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                            Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                            Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                            Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                            Icon(Icons.star, size: 0.6 * kPlayerScreenUnit),
+                          ],
+                        ),
                       ),
                       Material(
                         borderRadius: BorderRadius.all(Radius.circular(0.1 * kPlayerScreenUnit)),
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () async {
-                            const url =
-                                'https://play.google.com/store/apps/details?id=com.puran.stopwatchminimal';
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              print('invalid url----' * 10);
-                            }
-                          },
+                          onTap: openGooglePlayLink,
                           highlightColor: Colors.black,
                           borderRadius: BorderRadius.all(Radius.circular(0.1 * kPlayerScreenUnit)),
                           child: Container(
@@ -264,6 +284,16 @@ class SocialButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+void openGooglePlayLink() async {
+  //TODO:change package name
+  const url = 'https://play.google.com/store/apps/details?id=com.puran.stopwatchminimal';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    print('invalid url----' * 10);
   }
 }
 
@@ -360,4 +390,58 @@ class BoundaryClip extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(BoundaryClip oldClipper) => false;
+}
+
+class HiDialog extends StatefulWidget {
+  @override
+  _HiDialogState createState() => _HiDialogState();
+}
+
+class _HiDialogState extends State<HiDialog> {
+  double anim = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) Future.delayed(Duration(milliseconds: 50), () => setState(() => anim = 1));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      duration: Duration(seconds: 4),
+      opacity: (1 - anim),
+      curve: Interval(0.5, 1, curve: Curves.ease),
+      child: AnimatedPadding(
+        duration: Duration(seconds: 2),
+        curve: Curves.elasticOut,
+        padding: EdgeInsets.only(
+            bottom: (10 + anim * 0.6) * kPlayerScreenUnit, left: (2.5 + anim * 0.9) * kPlayerScreenUnit),
+        child: AnimatedContainer(
+          duration: Duration(seconds: 2),
+          curve: Curves.elasticOut,
+          height: anim * 0.6 * kPlayerScreenUnit,
+          width: anim * 0.9 * kPlayerScreenUnit,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(0.3 * kPlayerScreenUnit),
+              topRight: Radius.circular(0.3 * kPlayerScreenUnit),
+              bottomRight: Radius.circular(0.3 * kPlayerScreenUnit),
+            ),
+          ),
+          child: Text(
+            'Hi !',
+            textScaleFactor: 1,
+            style: TextStyle(
+              fontSize: 0.4 * kPlayerScreenUnit,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

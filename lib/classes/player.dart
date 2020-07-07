@@ -1,6 +1,7 @@
 import 'set_state_callbacks.dart';
 import 'storage.dart';
 import 'audio_focus.dart';
+import '../constants.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:audiofileplayer/audio_system.dart';
 import 'package:audiotagger/audiotagger.dart';
@@ -13,12 +14,8 @@ Player player = Player();
 class Player {
   Audio audio;
   bool audioPlaying = false;
-  bool shuffle = false;
-  bool loopSingle = false;
   double _audioDurationSeconds = 0;
   double _audioPositionSeconds = 0;
-  double imgWidthFactor;
-  double imgHeightFactor;
 
   /// Identifiers for the two custom Android notification buttons.
   static const String crossButtonId = 'crossButtonId';
@@ -111,10 +108,7 @@ class Player {
   Future<void> _localOnCompleteCallback() async {
     {
       if (loopSingle) {
-        await audio.pause();
-        audio.dispose();
         playNew();
-        player.resumeBackgroundAudio();
       } else {
         await playNext();
       }
@@ -244,6 +238,11 @@ class Player {
 
   Future<bool> handleAudioFocus() async {
     if (!havingAudioFocus) {
+      /// TODO: This works flawlessly, but the audio is not resumed automatically after
+      /// focus gained from transient focus lost if we again request focus, because each time we request,
+      /// a new object is created and previous one is discarded.
+      /// In simple, when audio is automatically paused during a call,
+      /// it will not resume automatically if user presses play button during this time.
       AudioFocus audioFocus = AudioFocus();
       audioFocus.audioFocusEvents.listen((focusEvent) async {
 //      print('-----' * 100);
@@ -251,7 +250,7 @@ class Player {
         if (focusEvent == AudioState.AUDIOFOCUS_GAIN) {
 //        print('AUDIOFOCUS_GAIN----' * 50);
           havingAudioFocus = true;
-          resumeBackgroundAudio();
+          await resumeBackgroundAudio();
           setStateCalls.folderScreen(); //!! do not alter the order of callbacks
           setStateCalls.audioScreen();
           setStateCalls.playerScreen();
