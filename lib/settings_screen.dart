@@ -489,6 +489,88 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           MyAnimatedSizeText(
+                            'What are the supported audio formats?',
+                            size: txtHeadingSize * kListTileHeight,
+                          ),
+                          MyAnimatedSizeText(
+                            storage.listSupportedAudioFormats,
+                            size: txtBodySize * kListTileHeight,
+                            col: txtBodyCol,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(height: 1),
+                  ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          MyAnimatedSizeText(
+                            'What is the meaning of icons shown next to the folder names?',
+                            size: txtHeadingSize * kListTileHeight,
+                          ),
+                          MyAnimatedSizeText(
+                            'The icon visually reveals the root location of a particular folder.',
+                            size: txtBodySize * kListTileHeight,
+                            col: txtBodyCol,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.phone_android,
+                                color: txtBodyCol,
+                                size: txtBodySize * kListTileHeight,
+                              ),
+                              MyAnimatedSizeText(
+                                ' for Phone Internal Storage',
+                                size: txtBodySize * kListTileHeight,
+                                col: txtBodyCol,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.sd_storage,
+                                color: txtBodyCol,
+                                size: txtBodySize * kListTileHeight,
+                              ),
+                              MyAnimatedSizeText(
+                                ' for SD Card External Storage',
+                                size: txtBodySize * kListTileHeight,
+                                col: txtBodyCol,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.usb,
+                                color: txtBodyCol,
+                                size: txtBodySize * kListTileHeight,
+                              ),
+                              MyAnimatedSizeText(
+                                ' for USB External Storage',
+                                size: txtBodySize * kListTileHeight,
+                                col: txtBodyCol,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(height: 1),
+                  ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          MyAnimatedSizeText(
                             'How to change the Album Art?',
                             size: txtHeadingSize * kListTileHeight,
                           ),
@@ -526,30 +608,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                   ),
-                  Divider(height: 1),
-                  ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          MyAnimatedSizeText(
-                            'What are the supported audio formats?',
-                            size: txtHeadingSize * kListTileHeight,
-                          ),
-                          MyAnimatedSizeText(
-                            storage.listSupportedAudioFormats,
-                            size: txtBodySize * kListTileHeight,
-                            col: txtBodyCol,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
-            SizedBox(height: 2 * kPlayerScreenUnit + 10, width: 10),
+            SizedBox(height: 10),
           ],
         ),
       ),

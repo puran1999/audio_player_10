@@ -28,6 +28,14 @@ class AudioFocus {
     return focusGranted;
   }
 
+  Future<void> abandonAudioFocus() async {
+    try {
+      final String str = await platform.invokeMethod('abandonAudioFocus');
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
   AudioState _parseAudioState(String state) {
     switch (state) {
       case "android.media.AUDIO_BECOMING_NOISY":

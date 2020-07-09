@@ -221,41 +221,78 @@ class SkewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform(
-      transform: Matrix4.skew(-0.463, 0),
-      child: Material(
-        color: col,
-        elevation: 2,
-        child: InkWell(
-          onTap: onTap,
-          highlightColor: Colors.red,
-          splashColor: Colors.red,
-          child: Stack(
-            alignment: Alignment.centerRight,
-            children: <Widget>[
-              ClipRect(
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 0.5 * height),
+          child: Transform(
+            transform: Matrix4.skew(-0.463, 0),
+            child: Material(
+              elevation: 3,
+              child: Container(
+                width: height,
+                height: height,
+                color: Colors.transparent,
+              ),
+            ),
+          ),
+        ),
+        ClipPath(
+          clipper: ButtonClipper(),
+          child: Material(
+            color: col,
+            child: Container(
+              width: 1.5 * height,
+              child: InkWell(
+                onTap: onTap,
+                highlightColor: Colors.red,
+                splashColor: Colors.red,
                 child: Transform(
-                  transform: Matrix4.skew(3.141 / 4, 0),
-                  child: Container(
-                    height: height,
-                    width: height,
-                    color: Colors.white10,
+                  transform: Matrix4.skew(-0.463, 0),
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      Transform(
+                        transform: Matrix4.skew(3.141 / 4, 0),
+                        child: Container(
+                          height: height,
+                          width: height,
+                          color: Colors.white10,
+                        ),
+                      ),
+                      Container(
+                        height: height,
+                        width: height,
+                        color: Colors.transparent,
+                        child: Icon(
+                          icon,
+                          size: 0.6 * height,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Container(
-                height: height,
-                width: height,
-                color: Colors.transparent,
-                child: Icon(
-                  icon,
-                  size: 0.6 * height,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
+}
+
+class ButtonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(size.width / 3, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(2 * size.width / 3, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(ButtonClipper oldClipper) => true;
 }

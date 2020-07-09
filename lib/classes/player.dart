@@ -152,7 +152,7 @@ class Player {
   }
 
   Future<void> resumeBackgroundAudio() async {
-    if (await handleAudioFocus()) {
+    if (await requestAudioFocus()) {
       try {
         audio.resume();
         audioPlaying = true;
@@ -170,6 +170,13 @@ class Player {
       audioPlaying = false;
       AudioSystem.instance.setPlaybackState(false, _audioPositionSeconds);
       _updateSystemControls(AndroidMediaButtonType.play);
+
+      ///this does not runs when audio is paused by system itself via focus lost
+      if (_havingAudioFocus) {
+        audioFocus.abandonAudioFocus();
+        _havingAudioFocus = false;
+        audioFocus = null; //this helps to re initiate audioFocus object when resume will be called again.
+      }
     } catch (e) {
       print(e);
     }
@@ -234,38 +241,36 @@ class Player {
     });
   }
 
-  bool havingAudioFocus = false;
+  bool _havingAudioFocus = false;
+  AudioFocus audioFocus;
 
-  Future<bool> handleAudioFocus() async {
-    if (!havingAudioFocus) {
-      /// TODO: This works flawlessly, but the audio is not resumed automatically after
-      /// focus gained from transient focus lost if we again request focus, because each time we request,
-      /// a new object is created and previous one is discarded.
-      /// In simple, when audio is automatically paused during a call,
-      /// it will not resume automatically if user presses play button during this time.
-      AudioFocus audioFocus = AudioFocus();
-      audioFocus.audioFocusEvents.listen((focusEvent) async {
+  Future<bool> requestAudioFocus() async {
+    if (!_havingAudioFocus) {
+      if (audioFocus == null) {
+        audioFocus = AudioFocus();
+        audioFocus.audioFocusEvents.listen((focusEvent) async {
 //      print('-----' * 100);
 //      print(focusEvent);
-        if (focusEvent == AudioState.AUDIOFOCUS_GAIN) {
+          if (focusEvent == AudioState.AUDIOFOCUS_GAIN) {
 //        print('AUDIOFOCUS_GAIN----' * 50);
-          havingAudioFocus = true;
-          await resumeBackgroundAudio();
-          setStateCalls.folderScreen(); //!! do not alter the order of callbacks
-          setStateCalls.audioScreen();
-          setStateCalls.playerScreen();
-        } else {
-          //        print('ELSE----' * 50);
-          havingAudioFocus = false;
-          await pauseBackgroundAudio();
-          setStateCalls.folderScreen(); //!! do not alter the order of callbacks
-          setStateCalls.audioScreen();
-          setStateCalls.playerScreen();
-        }
-      });
-      havingAudioFocus = await audioFocus.getAudioFocus();
+            _havingAudioFocus = true;
+            await resumeBackgroundAudio();
+            setStateCalls.folderScreen(); //!! do not alter the order of callbacks
+            setStateCalls.audioScreen();
+            setStateCalls.playerScreen();
+          } else {
+            //        print('ELSE----' * 50);
+            _havingAudioFocus = false;
+            await pauseBackgroundAudio();
+            setStateCalls.folderScreen(); //!! do not alter the order of callbacks
+            setStateCalls.audioScreen();
+            setStateCalls.playerScreen();
+          }
+        });
+      }
+      _havingAudioFocus = await audioFocus.getAudioFocus();
     }
-    return havingAudioFocus;
+    return _havingAudioFocus;
   }
 
   String secondsToString(double seconds) {

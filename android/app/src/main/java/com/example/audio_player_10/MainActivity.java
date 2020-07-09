@@ -58,6 +58,8 @@ public class MainActivity extends FlutterActivity {
                                 } else {
                                     result.success("FAILED");
                                 }
+                            } else if (call.method.equals("abandonAudioFocus")) {
+                                audioManager.abandonAudioFocus(audioFocusChangeListener);
                             } else {
                                 result.notImplemented();
                             }
