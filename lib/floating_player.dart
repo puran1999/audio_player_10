@@ -50,15 +50,24 @@ class _FloatingPlayerState extends State<FloatingPlayer> {
                 Padding(
                   padding:
                       EdgeInsets.only(right: 2 * playerSizePar - 0.5 * playerGapsPar, bottom: playerSizePar),
-                  child: Transform(
-                    transform: Matrix4.skew(-0.463, 0),
-                    child: Container(
-                      width: 2 * playerSizePar + 2 * playerGapsPar,
-                      height: playerSizePar + playerGapsPar,
-                      color: Colors.transparent,
-                    ),
+                  child: Container(
+                    width: 2 * (playerSizePar + playerGapsPar),
+                    height: playerSizePar + playerGapsPar,
+                    color: Colors.transparent,
                   ),
                 ),
+
+                ///this widget prevents unwanted actions, when user taps any small inter-space b/w the buttons
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: 3.5 * playerSizePar + 1.5 * playerGapsPar, bottom: playerSizePar),
+                  child: Container(
+                    width: playerSizePar,
+                    height: playerGapsPar,
+                    color: Colors.transparent,
+                  ),
+                ),
+
                 Padding(
                   padding: EdgeInsets.only(right: 2 * playerSizePar + 3 * playerGapsPar),
                   child: Transform(

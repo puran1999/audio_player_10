@@ -600,7 +600,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             size: txtHeadingSize * kListTileHeight,
                           ),
                           MyAnimatedSizeText(
-                            'The name showed in audio list view is the Filename, whereas the one shown on the player screen is the \'Title\' embedded in the ID3 tag. Refer to the first question to change that.',
+                            'The name showed in audio list view is the Filename, whereas the one shown on the player screen is the \'Title\' embedded in the ID3 tag. Refer to the above question to change that.',
                             size: txtBodySize * kListTileHeight,
                             col: txtBodyCol,
                           ),

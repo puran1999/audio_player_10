@@ -25,7 +25,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
     Future.delayed(Duration(milliseconds: 50), () {
       if (mounted) setState(() => pos = 1);
     });
-    Future.delayed(Duration(seconds: 4), () {
+    Future.delayed(Duration(milliseconds: 4500), () {
       if (mounted)
         setState(() {
           logoAnimationDone = true;
