@@ -20,7 +20,7 @@ class BackgroundImage extends StatelessWidget {
         image: DecorationImage(
           image: player.audio != null
               ? MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex])
-              : AssetImage('assets/albumArtDefault1.png'),
+              : AssetImage('assets/coverArt_1.jpg'),
           fit: BoxFit.cover,
         ),
       ),

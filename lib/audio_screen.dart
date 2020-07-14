@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'classes/player.dart';
 import 'classes/set_state_callbacks.dart';
@@ -45,9 +44,9 @@ class AudioScreenState extends State<AudioScreen> {
   void simpleSetState() {
     if (mounted) {
       setState(() {
-        if (storage.currentNavigationFolderIndex == storage.currentPlayingFolderIndex) {
+//        if (storage.currentNavigationFolderIndex == storage.currentPlayingFolderIndex) {
 //          scrollToCurrentPlaying();
-        }
+//        }
       });
     }
   }
@@ -64,13 +63,19 @@ class AudioScreenState extends State<AudioScreen> {
         backgroundColor: scaffoldTransparentColorForBgOverlay,
         appBar: AppBar(
           backgroundColor: Colors.black.withAlpha(50),
-          leading: Icon(Icons.folder, color: Colors.orangeAccent),
-          title: Text(
-            storage.foldersWithAudio[storage.currentNavigationFolderIndex][1],
-            textScaleFactor: 1,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 0.25 * kListTileHeight),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(Icons.folder, color: Colors.orangeAccent),
+          ),
+          title: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Text(
+              storage.foldersWithAudio[storage.currentNavigationFolderIndex][1],
+              textScaleFactor: 1,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 0.25 * kListTileHeight),
+            ),
           ),
           actions: <Widget>[
             IconButton(
@@ -157,6 +162,7 @@ class AudioScreenState extends State<AudioScreen> {
                         });
                         setState(() {});
                       },
+                      onLongPress: () {},
                     ),
                   );
           },

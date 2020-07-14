@@ -34,6 +34,9 @@ class _FolderScreenState extends State<FolderScreen> with WidgetsBindingObserver
     setState(() {
       loaded = true;
     });
+//    Future.delayed(Duration(seconds: 2), () async {
+    storage.loadArtworks();
+//    });
 //    });
   }
 
@@ -170,7 +173,11 @@ class _FolderScreenState extends State<FolderScreen> with WidgetsBindingObserver
                               ),
                               onTap: () {
                                 setState(() {
-                                  storage.findAllAudios(storage.foldersWithAudio[index][0]);
+                                  if (index != storage.currentPlayingFolderIndex) {
+                                    storage.findAllAudios(storage.foldersWithAudio[index][0]);
+                                  } else {
+                                    storage.copy_audiosInFolderPlaying0_into_audiosInFolderNavigation();
+                                  }
                                   storage.currentNavigationFolderIndex = index;
                                   Navigator.push(
                                           context, MaterialPageRoute(builder: (context) => AudioScreen()))

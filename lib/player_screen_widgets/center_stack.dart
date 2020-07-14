@@ -156,6 +156,10 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    BoxDecoration backDecoration = BoxDecoration(
+      color: widget.col3,
+      border: Border.all(color: widget.col2, width: 0.5),
+    );
     return Transform.translate(
       offset: Offset(0, 0.2 * widget.unit),
       child: SizedBox(
@@ -182,7 +186,7 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
                   child: Container(
                     width: widget.unit,
                     height: widget.unit,
-                    color: widget.col3,
+                    decoration: backDecoration,
                   ),
                 ),
               ),
@@ -198,7 +202,7 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
                   child: Container(
                     width: widget.unit,
                     height: widget.unit,
-                    color: widget.col3,
+                    decoration: backDecoration,
                   ),
                 ),
               ),
@@ -218,7 +222,7 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
                     child: Container(
                       width: widget.unit,
                       height: 1.12 * widget.unit,
-                      color: widget.col3,
+                      decoration: backDecoration,
                     ),
                   ),
                 ),

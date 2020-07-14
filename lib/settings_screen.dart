@@ -171,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Row(
                             children: <Widget>[
                               CircleAvatar(
-                                backgroundImage: MemoryImage(storage.rawArtworkImageDefault),
+                                backgroundImage: MemoryImage(storage.rawArtworkImage[0]),
                                 radius: 0.35 * kListTileHeight,
                               ),
                               Container(
@@ -839,7 +839,7 @@ class FloatingPlayerDemo extends StatelessWidget {
               borderRadius: BorderRadius.circular(playerSizePar + 0.5 * playerGapsPar),
               border: Border.all(width: 1, color: Colors.white, style: BorderStyle.solid),
               image: DecorationImage(
-                image: AssetImage('assets/albumArtDefault1.png'),
+                image: AssetImage('assets/coverArt_1.jpg'),
                 fit: BoxFit.cover,
               ),
             ),

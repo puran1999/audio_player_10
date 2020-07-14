@@ -75,8 +75,9 @@ class PlayerScreenState extends State<PlayerScreen> {
             unit: kPlayerScreenUnit,
             col1: Colors.white,
             col2: Colors.grey,
-//            col3: specialColor,
             col3: Colors.grey[800],
+//            col3: specialColor,
+//            col3: Color.fromARGB(255, 82, 82, 82), //between grey[700] and [800]
           ),
         ),
       ),

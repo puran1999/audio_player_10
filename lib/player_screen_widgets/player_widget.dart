@@ -39,7 +39,7 @@ class PlayerWidget extends StatelessWidget {
         Row(
           children: <Widget>[
             Transform.translate(
-              offset: Offset(0, unit / 2),
+              offset: Offset(-1, unit / 2),
               child: Transform(
                 transform: Matrix4.skew(0, -0.463),
                 child: Material(
@@ -47,7 +47,10 @@ class PlayerWidget extends StatelessWidget {
                   child: Container(
                     width: unit,
                     height: unit,
-                    color: col3,
+                    decoration: BoxDecoration(
+                      color: col3,
+                      border: Border.all(color: col2, width: 0.2),
+                    ),
                   ),
                 ),
               ),

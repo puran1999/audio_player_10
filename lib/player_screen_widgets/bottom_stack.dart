@@ -71,6 +71,10 @@ class _BottomStackState extends State<BottomStack> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    BoxDecoration backDecoration = BoxDecoration(
+      color: widget.col3,
+      border: Border.all(color: widget.col2, width: 0.2),
+    );
     return Stack(
       alignment: Alignment.topCenter,
       children: <Widget>[
@@ -104,7 +108,7 @@ class _BottomStackState extends State<BottomStack> with WidgetsBindingObserver {
             child: Container(
               width: widget.unit,
               height: widget.unit,
-              color: widget.col3,
+              decoration: backDecoration,
             ),
           ),
         ),
@@ -115,7 +119,7 @@ class _BottomStackState extends State<BottomStack> with WidgetsBindingObserver {
             child: Container(
               width: widget.unit,
               height: widget.unit,
-              color: widget.col3,
+              decoration: backDecoration,
             ),
           ),
         ),

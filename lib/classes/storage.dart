@@ -3,6 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider_ex/path_provider_ex.dart';
 import 'dart:io' as io;
 import 'dart:typed_data';
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:audiotagger/audiotagger.dart';
 
@@ -21,8 +22,8 @@ class Storage {
 
   Audiotagger tagger = new Audiotagger();
 
-  /// the default album art
-  Uint8List rawArtworkImageDefault;
+  /// the default album arts
+  List<Uint8List> rawArtworkImage;
 
   /// If any folder.jpg or cover.jpg is found in audio's folder,
   /// it will be used to replace those having no album art.
@@ -52,27 +53,39 @@ class Storage {
 //    Duration dur = DateTime.now().difference(now);                //to check time taken
 //    benchmarkTime = '${dur?.inSeconds}.${dur?.inMilliseconds}';   //to check time taken
 //    print('========== $benchmarkTime ==========');                //to check time taken
-    setStateCalls.folderScreen();
-    rawArtworkImageDefault = (await rootBundle.load('assets/albumArtDefault1.png')).buffer.asUint8List();
+  }
+
+  Future<void> loadArtworks() async {
+//    print('doing_____' * 50);
+    rawArtworkImage = [];
+    for (int i = 1; i < 14; i++) {
+      rawArtworkImage.add((await rootBundle.load('assets/coverArt_$i.jpg')).buffer.asUint8List());
+    }
+//    print('done______________' * 50);
   }
 
   Future<void> findAllAudios(String parentFolder) async {
     audiosInFolderNavigation.clear();
     rawArtworkImageFolder = null;
     ByteData dta;
+    Random random = Random();
+    int r = 0;
+    int p = 1;
 
     List<io.FileSystemEntity> _data =
         io.Directory(parentFolder).listSync(recursive: false, followLinks: false);
     _data.forEach((element) async {
       if (element is io.File) {
         if (_isAudio(element.path)) {
+          do r = random.nextInt(13); while (p == r);
+          p = r;
           audiosInFolderNavigation.add([
             element.path,
             element.path.substring(
               element.path.lastIndexOf('/') + 1,
               element.path.lastIndexOf('.'),
             ),
-            rawArtworkImageDefault,
+            rawArtworkImage[r],
           ]);
         } else if (_isFolderAlbumArt(element.path)) {
 //          dta = await rootBundle.load(element.path); //this does not work for other than app assets
@@ -96,8 +109,6 @@ class Storage {
       } else if (rawArtworkImageFolder != null) {
         audiosInFolderNavigation[i][2] = rawArtworkImageFolder;
       }
-//      else
-//        audiosInFolderNavigation[i][2] = rawArtworkImageDefault;
     }
     setStateCalls.audioScreen();
   }

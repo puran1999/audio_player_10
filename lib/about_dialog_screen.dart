@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -51,7 +52,7 @@ class _AboutDialogScreenState extends State<AboutDialogScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+        filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
