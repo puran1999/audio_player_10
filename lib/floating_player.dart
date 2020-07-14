@@ -237,7 +237,7 @@ class SkewButton extends StatelessWidget {
           child: Transform(
             transform: Matrix4.skew(-0.463, 0),
             child: Material(
-              elevation: 3,
+              elevation: 2,
               child: Container(
                 width: height,
                 height: height,

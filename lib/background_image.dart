@@ -25,7 +25,7 @@ class BackgroundImage extends StatelessWidget {
         ),
       ),
       child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        filter: ui.ImageFilter.blur(sigmaX: 30, sigmaY: 30),
         child: child,
       ),
     );
