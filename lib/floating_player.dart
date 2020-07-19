@@ -209,7 +209,8 @@ class _FloatingPlayerState extends State<FloatingPlayer> {
                       child: CircleAvatar(
                         radius: playerSizePar + playerGapsPar / 2 - 1,
                         backgroundImage:
-                            MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+//                            MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+                            storage.audiosInFolderPlaying2Artwork(storage.currentAudioIndex),
                       ),
                     ),
                   ),

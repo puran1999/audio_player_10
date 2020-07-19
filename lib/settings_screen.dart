@@ -17,6 +17,8 @@ final GlobalKey<MyExpansionTileState> expansionTile2 = new GlobalKey();
 final GlobalKey<MyExpansionTileState> expansionTile3 = new GlobalKey();
 final GlobalKey<MyExpansionTileState> expansionTile4 = new GlobalKey();
 final GlobalKey<MyExpansionTileState> expansionTile5 = new GlobalKey();
+final GlobalKey<MyExpansionTileState> expansionTile6 = new GlobalKey();
+final settingsScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SettingsScreenState extends State<SettingsScreen> {
   SharedPreferences prefs;
@@ -40,6 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return BackgroundImage(
       child: Scaffold(
         backgroundColor: scaffoldTransparentColorForBgOverlay,
+        key: settingsScaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.black.withAlpha(80),
           title: Row(
@@ -75,6 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     expansionTile3.currentState.collapse();
                     expansionTile4.currentState.collapse();
                     expansionTile5.currentState.collapse();
+                    expansionTile6.currentState.collapse();
                   }
                   setState(() {});
                 },
@@ -171,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Row(
                             children: <Widget>[
                               CircleAvatar(
-                                backgroundImage: MemoryImage(storage.rawArtworkImage[0]),
+                                backgroundImage: AssetImage('assets/coverArt_4.jpg'),
                                 radius: 0.35 * kListTileHeight,
                               ),
                               Container(
@@ -199,6 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     expansionTile3.currentState.collapse();
                     expansionTile4.currentState.collapse();
                     expansionTile5.currentState.collapse();
+                    expansionTile6.currentState.collapse();
                   }
                   setState(() {});
                 },
@@ -309,6 +314,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     expansionTile2.currentState.collapse();
                     expansionTile4.currentState.collapse();
                     expansionTile5.currentState.collapse();
+                    expansionTile6.currentState.collapse();
                   }
                   setState(() {});
                 },
@@ -390,6 +396,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     expansionTile2.currentState.collapse();
                     expansionTile3.currentState.collapse();
                     expansionTile5.currentState.collapse();
+                    expansionTile6.currentState.collapse();
                   }
                   setState(() {});
                 },
@@ -457,10 +464,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10, top: 10, left: 10),
-              child: Divider(height: 1, color: Colors.tealAccent.withAlpha(200)),
-            ),
             Container(
               color: Colors.black45,
               margin: const EdgeInsets.only(right: 10, top: 10, left: 10),
@@ -472,6 +475,136 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     expansionTile2.currentState.collapse();
                     expansionTile3.currentState.collapse();
                     expansionTile4.currentState.collapse();
+                    expansionTile6.currentState.collapse();
+                  }
+                  setState(() {});
+                },
+                leading: Icon(Icons.art_track),
+                title: MyAnimatedSizeText('Select Default Art', size: 0.25 * kListTileHeight),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Divider(height: 1, color: Colors.white),
+                  ),
+                  ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          MyAnimatedSizeText(
+                            'Random order',
+                            size: txtHeadingSize * kListTileHeight,
+                          ),
+                          MyAnimatedSizeText(
+                            'Choose whether the Artworks get assigned in a random fashion',
+                            size: txtBodySize * kListTileHeight,
+                            col: txtBodyCol,
+                          ),
+                        ],
+                      ),
+                    ),
+                    trailing: Switch(
+                      value: randomArt,
+                      onChanged: (bool b) {
+                        setState(() {
+                          randomArt = b;
+                        });
+                        saveToDevice(name: 'randomArt', value: randomArt);
+                      },
+                    ),
+                  ),
+                  Divider(height: 1),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.2 * kListTileHeight),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              MyAnimatedSizeText(
+                                'Select Artworks',
+                                size: txtHeadingSize * kListTileHeight,
+                              ),
+                              FlatButton(
+                                child: MyAnimatedSizeText(
+                                  'Select all',
+                                  size: 0.2 * kListTileHeight,
+                                  col: Colors.tealAccent,
+                                ),
+                                color: Colors.tealAccent.withAlpha(20),
+                                onPressed: () {
+                                  artIsSelectedSelectAll();
+                                  saveToDevice(name: 'artIsSelected', value: artIsSelected);
+                                  setState(() {});
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            ArtGridBox(id: 0),
+                            ArtGridBox(id: 1),
+                            ArtGridBox(id: 2),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            ArtGridBox(id: 3),
+                            ArtGridBox(id: 4),
+                            ArtGridBox(id: 5),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            ArtGridBox(id: 6),
+                            ArtGridBox(id: 7),
+                            ArtGridBox(id: 8),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            ArtGridBox(id: 9),
+                            ArtGridBox(id: 10),
+                            ArtGridBox(id: 11),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            ArtGridBox(id: 12),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10, top: 10, left: 10),
+              child: Divider(height: 1, color: Colors.tealAccent.withAlpha(200)),
+            ),
+            Container(
+              color: Colors.black45,
+              margin: const EdgeInsets.only(right: 10, top: 10, left: 10),
+              child: MyExpansionTile(
+                key: expansionTile6,
+                onExpansionChanged: (bool b) {
+                  if (b) {
+                    expansionTile1.currentState.collapse();
+                    expansionTile2.currentState.collapse();
+                    expansionTile3.currentState.collapse();
+                    expansionTile4.currentState.collapse();
+                    expansionTile5.currentState.collapse();
                   }
                   setState(() {});
                 },
@@ -839,13 +972,78 @@ class FloatingPlayerDemo extends StatelessWidget {
               borderRadius: BorderRadius.circular(playerSizePar + 0.5 * playerGapsPar),
               border: Border.all(width: 1, color: Colors.white, style: BorderStyle.solid),
               image: DecorationImage(
-                image: AssetImage('assets/coverArt_1.jpg'),
+                image: AssetImage('assets/coverArt_0.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class ArtGridBox extends StatefulWidget {
+  ArtGridBox({this.id = 0});
+
+  final int id;
+
+  @override
+  _ArtGridBoxState createState() => _ArtGridBoxState();
+}
+
+class _ArtGridBoxState extends State<ArtGridBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          splashColor: Colors.white38,
+          onTap: () {
+            if (artIsSelected[widget.id] == '0') {
+              artIsSelected[widget.id] = '1';
+            } else {
+              if (artIsSelectedTotal > 1) {
+                artIsSelected[widget.id] = '0';
+              } else {
+                settingsScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(
+                    'Select at least one',
+                    textScaleFactor: 1,
+                    style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
+                  ),
+                  duration: Duration(seconds: 1),
+                  backgroundColor: Colors.black45,
+                ));
+              }
+            }
+            artIsSelectedCalculateTotal();
+            saveToDevice(name: 'artIsSelected', value: artIsSelected);
+            setState(() {});
+          },
+          child: Container(
+            alignment: Alignment.topRight,
+            child: artIsSelected[widget.id] == '1'
+                ? Icon(Icons.check_circle, size: 20, color: Colors.tealAccent)
+                : Icon(Icons.radio_button_unchecked, size: 20, color: Colors.white54),
+          ),
+        ),
+      ),
+      margin: EdgeInsets.only(right: 10, bottom: 10),
+      width: (kScreenSize.width - 6 * 10) / 3,
+      height: (kScreenSize.width - 6 * 10) / 3,
+      decoration: BoxDecoration(
+        border: Border.all(
+            width: 1,
+            color: artIsSelected[widget.id] == '1' ? Colors.tealAccent : Colors.white54,
+            style: BorderStyle.solid),
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          image: AssetImage('assets/coverArt_${widget.id}.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

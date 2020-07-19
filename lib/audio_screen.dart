@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io' as io;
 import 'classes/player.dart';
 import 'classes/set_state_callbacks.dart';
 import 'classes/storage.dart';
@@ -119,7 +120,7 @@ class AudioScreenState extends State<AudioScreen> {
                           child: Row(
                             children: <Widget>[
                               CircleAvatar(
-                                backgroundImage: MemoryImage(storage.audiosInFolderNavigation[index][2]),
+                                backgroundImage: storage.audiosInFolderNavigationArtwork(index),
                                 radius: 0.35 * kListTileHeight,
                               ),
                               ConstrainedBox(
@@ -162,7 +163,6 @@ class AudioScreenState extends State<AudioScreen> {
                         });
                         setState(() {});
                       },
-                      onLongPress: () {},
                     ),
                   );
           },

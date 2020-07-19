@@ -19,13 +19,14 @@ class BackgroundImage extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: player.audio != null
-              ? MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex])
-              : AssetImage('assets/coverArt_1.jpg'),
+//              ? MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex])
+              ? storage.audiosInFolderPlaying2Artwork(storage.currentAudioIndex)
+              : AssetImage('assets/coverArt_0.jpg'),
           fit: BoxFit.cover,
         ),
       ),
       child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+        filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: child,
       ),
     );

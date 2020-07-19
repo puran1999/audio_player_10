@@ -1,3 +1,6 @@
+import 'package:audio_player_10/constants.dart';
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as image;
 import 'set_state_callbacks.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider_ex/path_provider_ex.dart';
@@ -15,7 +18,38 @@ class Storage {
   List<List<dynamic>> audiosInFolderNavigation = []; // [ [fullPath, onlyName, artwork], ...]
   List<String> audiosInFolderPlaying0 = [];
   List<String> audiosInFolderPlaying1 = [];
-  List<Uint8List> audiosInFolderPlaying2 = [];
+  List<dynamic> _audiosInFolderPlaying2 = [];
+
+  ImageProvider audiosInFolderNavigationArtwork(int index) {
+    if (audiosInFolderNavigation[index][2].runtimeType == int) {
+      return AssetImage('assets/coverArt_${audiosInFolderNavigation[index][2]}.jpg');
+    } else if (audiosInFolderNavigation[index][2].runtimeType == String) {
+      return MemoryImage(rawArtworkImageFolderNavigation);
+    } else {
+      return MemoryImage(audiosInFolderNavigation[index][2]);
+    }
+  }
+
+  ImageProvider audiosInFolderPlaying2Artwork(int index) {
+    if (_audiosInFolderPlaying2[index].runtimeType == int) {
+      return AssetImage('assets/coverArt_${_audiosInFolderPlaying2[index]}.jpg');
+    } else if (_audiosInFolderPlaying2[index].runtimeType == String) {
+      return MemoryImage(rawArtworkImageFolderPlaying);
+    } else {
+      return MemoryImage(_audiosInFolderPlaying2[index]);
+    }
+  }
+
+  Uint8List audiosInFolderPlaying2ArtworkAsBytes(int index) {
+    if (_audiosInFolderPlaying2[index].runtimeType == int) {
+      return rawArtworkImage[_audiosInFolderPlaying2[index]];
+    } else if (_audiosInFolderPlaying2[index].runtimeType == String) {
+      return rawArtworkImageFolderPlaying;
+    } else {
+      return _audiosInFolderPlaying2[index];
+    }
+  }
+
   int currentNavigationFolderIndex;
   int currentPlayingFolderIndex;
   int currentAudioIndex;
@@ -27,7 +61,8 @@ class Storage {
 
   /// If any folder.jpg or cover.jpg is found in audio's folder,
   /// it will be used to replace those having no album art.
-  Uint8List rawArtworkImageFolder;
+  Uint8List rawArtworkImageFolderNavigation;
+  Uint8List rawArtworkImageFolderPlaying;
 
 //  String benchmarkTime;                                           //to check time taken
 
@@ -58,7 +93,7 @@ class Storage {
   Future<void> loadArtworks() async {
 //    print('doing_____' * 50);
     rawArtworkImage = [];
-    for (int i = 1; i < 14; i++) {
+    for (int i = 0; i < artTotal; i++) {
       rawArtworkImage.add((await rootBundle.load('assets/coverArt_$i.jpg')).buffer.asUint8List());
     }
 //    print('done______________' * 50);
@@ -66,31 +101,44 @@ class Storage {
 
   Future<void> findAllAudios(String parentFolder) async {
     audiosInFolderNavigation.clear();
-    rawArtworkImageFolder = null;
+    rawArtworkImageFolderNavigation = null;
     ByteData dta;
     Random random = Random();
-    int r = 0;
-    int p = 1;
+    int randomInteger = -1;
+    int p = 0;
 
     List<io.FileSystemEntity> _data =
         io.Directory(parentFolder).listSync(recursive: false, followLinks: false);
     _data.forEach((element) async {
       if (element is io.File) {
         if (_isAudio(element.path)) {
-          do r = random.nextInt(13); while (p == r);
-          p = r;
+          if (randomArt && artIsSelectedTotal >= 3) {
+            do {
+              randomInteger = random.nextInt(artTotal);
+            } while (p == randomInteger || artIsSelected[randomInteger] == '0');
+            p = randomInteger;
+          } else {
+            do {
+              randomInteger++;
+              if (randomInteger >= artTotal) randomInteger = 0;
+            } while (artIsSelected[randomInteger] == '0');
+          }
+
           audiosInFolderNavigation.add([
             element.path,
             element.path.substring(
               element.path.lastIndexOf('/') + 1,
               element.path.lastIndexOf('.'),
             ),
-            rawArtworkImage[r],
+            randomInteger,
           ]);
         } else if (_isFolderAlbumArt(element.path)) {
 //          dta = await rootBundle.load(element.path); //this does not work for other than app assets
           dta = element.readAsBytesSync().buffer.asByteData();
-          rawArtworkImageFolder = dta.buffer.asUint8List();
+          Uint8List art = dta.buffer.asUint8List();
+          rawArtworkImageFolderNavigation = art;
+//          rawArtworkImageFolderNavigation =
+//              image.encodeJpg(image.copyResize(image.decodeImage(art), width: 500, height: 500));
         }
       }
     });
@@ -103,11 +151,12 @@ class Storage {
     for (int i = 0; i < audiosInFolderNavigation.length; i++) {
       try {
         art = await tagger.readArtwork(path: audiosInFolderNavigation[i][0]);
+//        art = image.encodeJpg(image.copyResize(image.decodeImage(art), width: 500, height: 500));
       } catch (e) {}
       if (art != null) {
         audiosInFolderNavigation[i][2] = art;
-      } else if (rawArtworkImageFolder != null) {
-        audiosInFolderNavigation[i][2] = rawArtworkImageFolder;
+      } else if (rawArtworkImageFolderNavigation != null) {
+        audiosInFolderNavigation[i][2] = "";
       }
     }
     setStateCalls.audioScreen();
@@ -275,12 +324,13 @@ class Storage {
   void copy_audiosInFolderNavigation_into_audiosInFolderPlaying() {
     storage.audiosInFolderPlaying0.clear();
     storage.audiosInFolderPlaying1.clear();
-    storage.audiosInFolderPlaying2.clear();
+    storage._audiosInFolderPlaying2.clear();
     storage.audiosInFolderNavigation.forEach((element) {
       storage.audiosInFolderPlaying0.add(element[0]);
       storage.audiosInFolderPlaying1.add(element[1]);
-      storage.audiosInFolderPlaying2.add(element[2]);
+      storage._audiosInFolderPlaying2.add(element[2]);
     });
+    rawArtworkImageFolderPlaying = rawArtworkImageFolderNavigation;
   }
 
   // ignore: non_constant_identifier_names
@@ -290,8 +340,9 @@ class Storage {
       storage.audiosInFolderNavigation.add([
         storage.audiosInFolderPlaying0[i],
         storage.audiosInFolderPlaying1[i],
-        storage.audiosInFolderPlaying2[i],
+        storage._audiosInFolderPlaying2[i],
       ]);
     }
+    rawArtworkImageFolderNavigation = rawArtworkImageFolderPlaying;
   }
 }

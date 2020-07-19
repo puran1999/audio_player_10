@@ -224,7 +224,8 @@ class SquaredAlbumArtWidget extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+//          image: MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+          image: storage.audiosInFolderPlaying2Artwork(storage.currentAudioIndex),
           fit: BoxFit.cover,
         ),
       ),

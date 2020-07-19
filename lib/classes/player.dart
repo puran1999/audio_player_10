@@ -86,6 +86,13 @@ class Player {
           onPosition: _localPositionCallback,
           onComplete: _localOnCompleteCallback,
         );
+//        audio = Audio.loadFromRemoteUrl(
+//          "https://sribhainisahib.com/sites/default/files/audio_gallery_file/08_10_2019_kirtan.mp3",
+//          playInBackground: true,
+//          onDuration: _localDurationCallback,
+//          onPosition: _localPositionCallback,
+//          onComplete: _localOnCompleteCallback,
+//        );
       } catch (e) {
         print(e);
       }
@@ -219,7 +226,8 @@ class Player {
 //      album: tag.album,
 //      genre: tag.genre,
 //      durationSeconds: _audioDurationSeconds,
-      artBytes: storage.audiosInFolderPlaying2[storage.currentAudioIndex],
+//      artBytes: storage.audiosInFolderPlaying2[storage.currentAudioIndex],
+      artBytes: storage.audiosInFolderPlaying2ArtworkAsBytes(storage.currentAudioIndex),
     ));
 
     AudioSystem.instance.setAndroidNotificationButtons(<dynamic>[

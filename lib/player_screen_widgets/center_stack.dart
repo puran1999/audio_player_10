@@ -243,11 +243,10 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
                     shuffle = !shuffle;
                     saveToDevice(name: 'shuffle', value: shuffle);
                     playerScaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: RichText(
-                        text: TextSpan(
-                          text: shuffle ? 'Shuffle ON' : 'Shuffle OFF',
-                          style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
-                        ),
+                      content: Text(
+                        shuffle ? 'Shuffle ON' : 'Shuffle OFF',
+                        textScaleFactor: 1,
+                        style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
                       ),
                       duration: Duration(milliseconds: 500),
                       backgroundColor: Colors.black45,
@@ -270,11 +269,10 @@ class _CenterStackState extends State<CenterStack> with WidgetsBindingObserver {
                     loopSingle = !loopSingle;
                     saveToDevice(name: 'loopSingle', value: loopSingle);
                     playerScaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: RichText(
-                        text: TextSpan(
-                          text: loopSingle ? 'Loop single' : 'No loop',
-                          style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
-                        ),
+                      content: Text(
+                        loopSingle ? 'Loop single' : 'Loop all',
+                        textScaleFactor: 1,
+                        style: TextStyle(color: Colors.white, fontSize: 0.25 * kListTileHeight),
                       ),
                       duration: Duration(milliseconds: 500),
                       backgroundColor: Colors.black45,
@@ -400,12 +398,14 @@ class SquaredAlbumArtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//    print('_' * 2000);
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+//          image: MemoryImage(storage.audiosInFolderPlaying2[storage.currentAudioIndex]),
+          image: storage.audiosInFolderPlaying2Artwork(storage.currentAudioIndex),
           fit: BoxFit.cover,
         ),
       ),

@@ -32,6 +32,28 @@ bool showStorageIcons = true;
 bool shuffle = false;
 bool loopSingle = false;
 
+/// Random Art
+bool randomArt = true;
+
+/// Select AlbumArts
+List<String> artIsSelected = ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'];
+const int artTotal = 13;
+int artIsSelectedTotal = artTotal;
+
+void artIsSelectedCalculateTotal() {
+  artIsSelectedTotal = 0;
+  artIsSelected.forEach((element) {
+    if (element == '1') artIsSelectedTotal++;
+  });
+//  print(artIsSelectedTotal);
+}
+
+void artIsSelectedSelectAll() {
+  artIsSelected = ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'];
+  artIsSelectedTotal = artTotal;
+}
+
+///setting the size constants require MediaQuery, hence a build context
 void setAllConstants(BuildContext context) async {
   kScreenSize = MediaQuery.of(context).size;
   kPlayerScreenUnit = kScreenSize.width / 7.3;
@@ -50,6 +72,9 @@ Future<void> loadSettings() async {
   showStorageIcons = prefs.getBool('showStorageIcons') ?? showStorageIcons;
   shuffle = prefs.getBool('shuffle') ?? shuffle;
   loopSingle = prefs.getBool('loopSingle') ?? loopSingle;
+  randomArt = prefs.getBool('randomArt') ?? randomArt;
+  artIsSelected = prefs.getStringList('artIsSelected') ?? artIsSelected;
+  artIsSelectedCalculateTotal();
 }
 
 void saveToDevice({@required String name, @required dynamic value}) async {
@@ -58,6 +83,9 @@ void saveToDevice({@required String name, @required dynamic value}) async {
     await prefs.setBool(name, value);
   } else if (value.runtimeType == int) {
     await prefs.setInt(name, value);
+  } else if (value is List<String>) {
+    artIsSelectedCalculateTotal();
+    await prefs.setStringList(name, value);
   }
 }
 
@@ -73,6 +101,9 @@ void resetToDefault() async {
   showStorageIcons = true;
   shuffle = false;
   loopSingle = false;
+  randomArt = true;
+  artIsSelectedSelectAll();
+  artIsSelectedCalculateTotal();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('kListTileHeightFactor', kListTileHeightFactor);
   prefs.setInt('kFloaterHeightFactor', kFloaterHeightFactor);
@@ -83,4 +114,6 @@ void resetToDefault() async {
   prefs.setBool('showStorageIcons', showStorageIcons);
   prefs.setBool('shuffle', shuffle);
   prefs.setBool('loopSingle', loopSingle);
+  prefs.setBool('randomArt', randomArt);
+  prefs.setStringList('artIsSelected', artIsSelected);
 }
